@@ -1,26 +1,29 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { watchLive } from './shared/sources.js';
-import { draw } from './shared/lab.js';
+import { draw, stopExperience } from './shared/lab.js';
 export function App() {
   const chart = useRef(null),
     [packet, setPacket] = useState(null),
     [error, setError] = useState(''),
     [limit, setLimit] = useState(32);
-  useEffect(
-    () =>
-      watchLive(
-        'books',
-        (p) => {
-          setError('');
-          setPacket(p);
-        },
-        (e) => {
-          setPacket(null);
-          setError(e.message);
-        },
-      ),
-    [],
-  );
+  useEffect(() => {
+    const node = chart.current;
+    const stop = watchLive(
+      'books',
+      (p) => {
+        setError('');
+        setPacket(p);
+      },
+      (e) => {
+        setPacket(null);
+        setError(e.message);
+      },
+    );
+    return () => {
+      stop();
+      if (node) stopExperience(node);
+    };
+  }, []);
   useEffect(() => {
     if (chart.current && packet)
       draw(chart.current, packet, packet.rows.slice(0, limit), {

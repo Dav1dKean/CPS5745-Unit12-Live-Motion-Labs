@@ -1,5 +1,7 @@
 ﻿import { d3, createScene, label, hover, palette, number } from './core.js';
-export function events(node, packet, rows) {
+import { eventCategories } from '../sources.js';
+
+export function events(node, packet, rows, { filters }) {
   const scene = createScene(
     node,
     'Natural-event radial atlas',
@@ -10,8 +12,11 @@ export function events(node, packet, rows) {
     cy = 300;
   const categories = rows.map((d, i) => ({ ...d, color: palette[i % 6] })),
     allowed = new Set(categories.map((d) => d.label));
-  const all = packet.raw.events
-    .filter((e) => (e.categories || []).some((c) => allowed.has(c.title)))
+  const sourceEvents = packet.raw.events;
+  const countMode = filters.countMode;
+  const all = sourceEvents
+    .map((event) => ({ ...event, memberships: eventCategories(event, countMode) }))
+    .filter((event) => event.memberships.some((title) => allowed.has(title)))
     .map((e) => ({ ...e, time: Date.parse(e.geometry?.at(-1)?.date || '') }))
     .filter((e) => Number.isFinite(e.time))
     .sort((a, b) => b.time - a.time);
@@ -37,13 +42,16 @@ export function events(node, packet, rows) {
     .attr('tabindex', 0)
     .attr('role', 'button')
     .attr('aria-label', (d) => `${d.data.label}, ${d.data.value} memberships`)
-    .on('click', (_, d) => {
+    .on('click keydown', (event, d) => {
+      if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
       pin = pin === d.data.label ? null : d.data.label;
       scene.inspect(
         d.data.label,
         `${d.data.value} category memberships in returned events; click again to release.`,
       );
       scene.probe.category = pin;
+      render(1, scene.probe.time);
     });
   wedges.append('title').text((d) => `${d.data.label}: ${d.data.value}`);
   svg
@@ -61,13 +69,13 @@ export function events(node, packet, rows) {
   const extent = d3.extent(visible, (d) => d.time),
     radial = d3.scaleLinear().domain(extent).range([80, 218]);
   const nodes = visible.map((e, i) => {
-    const first = e.categories.find((c) => allowed.has(c.title)),
-      a = byCat.get(first.title),
+    const first = e.memberships.find((title) => allowed.has(title)),
+      a = byCat.get(first),
       angle = a.startAngle + (a.endAngle - a.startAngle) * ((i * 0.618) % 1);
     return {
       ...e,
       id: e.id,
-      category: first.title,
+      category: first,
       color: a.data.color,
       angle,
       r: radial(e.time),
@@ -76,12 +84,12 @@ export function events(node, packet, rows) {
     };
   });
   const links = nodes.flatMap((n) =>
-    n.categories
-      .filter((c) => allowed.has(c.title))
-      .map((c) => ({
+    n.memberships
+      .filter((title) => allowed.has(title))
+      .map((title) => ({
         node: n,
-        arc: byCat.get(c.title),
-        color: byCat.get(c.title).data.color,
+        arc: byCat.get(title),
+        color: byCat.get(title).data.color,
       })),
   );
   const curves = svg
@@ -108,7 +116,7 @@ export function events(node, packet, rows) {
     scene,
     (d) => d.title,
     (d) =>
-      `${new Date(d.time).toLocaleDateString()} · ${d.categories.map((c) => c.title).join(', ')} · ${d.closed ? 'closed' : 'open'} event`,
+      `${new Date(d.time).toLocaleDateString()} · ${eventCategories(d).join(', ')} · ${d.closed ? 'closed' : 'open'} event`,
   );
   const center = svg.append('g');
   center
@@ -123,13 +131,20 @@ export function events(node, packet, rows) {
     'text-anchor',
     'middle',
   );
-  label(center, cx, cy + 22, 'returned events', 11).attr('text-anchor', 'middle');
+  label(center, cx, cy + 22, 'dated matches', 11).attr('text-anchor', 'middle');
   label(svg, 835, 100, 'THE EVENT GARDEN', 12, '#9c77b9');
   label(svg, 835, 140, String(visible.length), 50, '#3f5278');
   label(svg, 835, 171, 'latest events drawn');
-  label(svg, 835, 218, 'Category sectors use all returned');
-  label(svg, 835, 241, 'membership counts. Dots are');
-  label(svg, 835, 264, 'capped at the latest 150 events.');
+  label(
+    svg,
+    835,
+    218,
+    countMode === 'first'
+      ? 'Sectors count first categories.'
+      : 'Sectors count all memberships.',
+  );
+  label(svg, 835, 241, 'Dots show dated matches.');
+  label(svg, 835, 264, 'Up to 150 recent matches.');
   label(svg, 835, 316, 'Click a category to explode it.');
   label(svg, 835, 339, 'Hover a seed for its real title.');
   label(svg, 835, 402, 'The 500-event API cap is not');
@@ -138,15 +153,24 @@ export function events(node, packet, rows) {
   scene.controls('Event selection', ['Release category'], () => (pin = null));
   scene.inspect(
     'Category memberships become a living radial structure',
-    'Outer sectors encode returned membership counts. Dot radius encodes event recency, not severity; connectors show actual category membership.',
+    'Outer sectors encode returned membership counts. Distance from the center encodes event recency; connectors show actual category membership.',
+  );
+  const distinct = new Set(sourceEvents.map((event) => event.id)).size;
+  const memberships = d3.sum(sourceEvents, (event) => eventCategories(event).length);
+  const firstCount = d3.sum(
+    sourceEvents,
+    (event) => eventCategories(event, 'first').length,
+  );
+  scene.report(
+    `${distinct} distinct source event IDs · ${memberships} all-category memberships · ${firstCount} first-category assignments · ${nodes.length} dated events drawn. Request cap 500. Display cap 150.`,
   );
   const line = d3.line().curve(d3.curveBundle.beta(0.86));
-  scene.frame((dt, t) => {
+  function render(dt, t) {
     for (const n of nodes) {
       const a = mode
         ? ((n.time - extent[0]) / Math.max(1, extent[1] - extent[0])) * Math.PI * 2
         : n.angle;
-      const offset = pin && n.categories.some((c) => c.title === pin) ? 36 : 0;
+      const offset = pin && n.memberships.includes(pin) ? 36 : 0;
       const r = n.r + offset;
       n.px +=
         (cx + Math.sin(a) * (r + Math.sin(t + n.angle) * 2) - n.px) * Math.min(1, dt * 5);
@@ -156,10 +180,8 @@ export function events(node, packet, rows) {
     dots
       .attr('cx', (d) => d.px)
       .attr('cy', (d) => d.py)
-      .attr('r', (d) => (pin && d.categories.some((c) => c.title === pin) ? 5 : 3.5))
-      .attr('opacity', (d) =>
-        !pin || d.categories.some((c) => c.title === pin) ? 1 : 0.1,
-      );
+      .attr('r', (d) => (pin && d.memberships.includes(pin) ? 5 : 3.5))
+      .attr('opacity', (d) => (!pin || d.memberships.includes(pin) ? 1 : 0.1));
     curves
       .attr('d', (d) => {
         const a = (d.arc.startAngle + d.arc.endAngle) / 2;
@@ -173,6 +195,8 @@ export function events(node, packet, rows) {
     scene.probe.eventNodes = nodes.length;
     scene.probe.links = links.length;
     scene.probe.layout = mode;
-  });
+  }
+  render(1, 0);
+  scene.frame(render);
   return scene;
 }

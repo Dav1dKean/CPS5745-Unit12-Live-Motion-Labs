@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:23 PM · auto refresh enabled"
+  },
+  {
+    "id": 2,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:34 PM · auto refresh enabled"
+  },
+  {
+    "id": 3,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:39 PM · auto refresh enabled"
+  },
+  {
+    "id": 4,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:42 PM · auto refresh enabled"
+  },
+  {
+    "id": 5,
+    "state": "LIVE SOURCE UNAVAILABLE",
+    "status": "Live request failed: fetch failed. No saved response is substituted."
+  },
+  {
+    "id": 6,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:56 PM · auto refresh enabled"
+  },
+  {
+    "id": 7,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:58 PM · auto refresh enabled"
+  },
+  {
+    "id": 8,
+    "state": "LIVE RESPONSE VERIFIED",
+    "status": "Retrieved 8:30:59 PM · auto refresh enabled"
+  }
+]

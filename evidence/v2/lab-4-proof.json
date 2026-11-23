@@ -1,0 +1,20 @@
+{
+  "id": 4,
+  "source": {
+    "name": "Open Library",
+    "url": "https://openlibrary.org/search.json?q=data+visualization&limit=70&fields=key,title,first_publish_year,edition_count,author_key,author_name,subject",
+    "docs": "https://openlibrary.org/dev/docs/api/search",
+    "license": "Open Library catalog data; retain attribution and original response.",
+    "unit": "editions",
+    "key": "books",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:46:59.284Z",
+    "providerDate": "Mon, 23 Nov 2026 01:46:59 GMT",
+    "providerAge": null,
+    "sha256": "d74029d1dbbd7415d83de24af705c15b8f19917b3f36cf9b4e88e793fb114609"
+  },
+  "selectedRecords": 32,
+  "scene": "The author–work constellation",
+  "animationFrames": 52,
+  "pageErrors": []
+}

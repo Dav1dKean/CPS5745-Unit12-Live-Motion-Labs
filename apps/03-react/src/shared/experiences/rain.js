@@ -15,6 +15,7 @@ export function rain(node, packet, rows) {
     cities = [...d3.group(rows, (d) => d.city)].map(([name, series], i) => ({
       name,
       series: series.sort((a, b) => a.time - b.time),
+      byTime: new Map(series.map((d) => [d.time, d.value])),
       color: palette[i % 6],
       x: (i - 2) * 165,
     }));
@@ -22,8 +23,15 @@ export function rain(node, packet, rows) {
     index = d3.greatestIndex(cities[selected].series, (d) => d.value),
     yaw = 0.55,
     auto = true,
-    clock = 0,
-    accumulated = false;
+    clock = 0;
+  const nyTime = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
   const max = Math.max(
       0.1,
       d3.max(rows, (d) => d.value),
@@ -76,7 +84,7 @@ export function rain(node, packet, rows) {
     }
   }
   function amount(c) {
-    return c.series[Math.min(index, c.series.length - 1)]?.value || 0;
+    return c.byTime.get(cities[selected].series[index].time);
   }
   const timeline = scene.timeline(
     'Rain forecast interval',
@@ -89,15 +97,20 @@ export function rain(node, packet, rows) {
       update();
     },
   );
-  scene.controls(
+  const locations = scene.controls(
     'Forecast location',
     cities.map((c) => c.name),
     (_, i) => {
+      const targetTime = cities[selected].series[index].time;
       selected = i;
-      index = Math.min(index, cities[i].series.length - 1);
+      auto = false;
+      index = d3.leastIndex(cities[i].series, (d) => Math.abs(d.time - targetTime));
       update();
     },
   );
+  locations
+    .querySelectorAll('button')
+    .forEach((b, i) => b.setAttribute('aria-pressed', String(i === selected)));
   scene.controls(
     'Rain playback',
     ['Play hours', 'Hold hour', 'Find wettest interval'],
@@ -113,17 +126,24 @@ export function rain(node, packet, rows) {
   svg.call(
     d3.drag().on('drag', (e) => {
       yaw += e.dx * 0.008;
+      render(0, scene.probe.time);
     }),
   );
   function update() {
     const d = cities[selected].series[index];
     big.text(`${number(d.value)} mm`);
     caption.text(`${cities[selected].name} · selected forecast interval`);
-    timeLabel.text(new Date(d.time).toLocaleString());
-    timeline.set(
-      index,
-      new Date(d.time).toLocaleTimeString('en-US', { hour: 'numeric' }),
-    );
+    timeLabel.text(nyTime.format(d.time));
+    timeline.slider.max = cities[selected].series.length - 1;
+    locations
+      .querySelectorAll('button')
+      .forEach((b, i) => b.setAttribute('aria-pressed', String(i === selected)));
+    const comparison = cities.map((c) => {
+      const value = amount(c);
+      return `${c.name} ${value === undefined ? 'unreported' : value + ' mm'}`;
+    });
+    scene.report(`${nyTime.format(d.time)} · ${comparison.join(' · ')}`);
+    timeline.set(index, nyTime.format(d.time));
     scene.probe.city = cities[selected].name;
     scene.probe.rain = d.value;
     scene.probe.hour = d.time;
@@ -142,6 +162,9 @@ export function rain(node, packet, rows) {
       index = (index + 1) % cities[selected].series.length;
       update();
     }
+    render(dt, t);
+  });
+  function render(dt, t) {
     ctx.clearRect(0, 0, 1100, 600);
     const ground = ctx.createLinearGradient(0, 180, 0, 580);
     ground.addColorStop(0, '#fafcff');
@@ -150,7 +173,7 @@ export function rain(node, packet, rows) {
     ctx.fillRect(0, 0, 1100, 600);
     for (const c of cities) {
       const a = amount(c),
-        z = height(a);
+        z = a === undefined ? 0 : height(a);
       poly(
         [
           [c.x - 62, -40, 0],
@@ -236,9 +259,9 @@ export function rain(node, packet, rows) {
     values
       .attr('x', (d) => project(d.x, 73, 0)[0])
       .attr('y', (d) => project(d.x, 73, 0)[1] + 40)
-      .text((d) => number(amount(d)) + ' mm');
+      .text((d) => (amount(d) === undefined ? 'unreported' : number(amount(d)) + ' mm'));
     scene.probe.particles = rainCount;
     scene.probe.rotation = yaw;
-  });
+  }
   return scene;
 }

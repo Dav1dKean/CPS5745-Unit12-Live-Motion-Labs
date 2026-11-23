@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import './shared/style.css';
 import { watchLive, normalizeEvents } from './shared/sources.js';
-import { installShell, draw } from './shared/lab.js';
+import { installShell, draw, stopExperience } from './shared/lab.js';
 installShell(5);
 class EventChart extends LitElement {
   static properties = {
@@ -21,7 +21,14 @@ class EventChart extends LitElement {
   createRenderRoot() {
     return this;
   }
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.hasUpdated) this.start();
+  }
   firstUpdated() {
+    this.start();
+  }
+  start() {
     this.stop = watchLive(
       'events',
       (p) => {
@@ -36,6 +43,8 @@ class EventChart extends LitElement {
   }
   disconnectedCallback() {
     this.stop?.();
+    const chart = this.querySelector('#chart');
+    if (chart) stopExperience(chart);
     super.disconnectedCallback();
   }
   updated() {
@@ -45,7 +54,7 @@ class EventChart extends LitElement {
       kind: 'bar',
       title: 'NASA EONET event categories',
       filters: { categories: this.limit, countMode: this.countMode },
-      limitation: `${this.packet.raw.events.length} unique events were returned by a request capped at 500. Counts are ${this.countMode === 'all' ? 'category memberships, which may exceed the number of events' : 'first-category assignments, one per event'}. The provider is not a complete census of all disasters; a capped response may be incomplete.`,
+      limitation: `${this.packet.raw.events.length} event records were returned by a request capped at 500. Counts are ${this.countMode === 'all' ? 'category memberships, which may exceed the number of events' : 'first-category assignments, one per event'}. The provider is not a complete census of all disasters; a capped response may be incomplete.`,
     });
   }
   render() {

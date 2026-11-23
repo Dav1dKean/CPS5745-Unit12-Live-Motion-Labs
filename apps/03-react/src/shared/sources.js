@@ -6,7 +6,9 @@ export function normalizeEarthquakes(raw) {
   return raw.features
     .filter(
       (f) =>
-        numeric(f.properties?.mag) && f.geometry?.coordinates?.length >= 3 && f.geometry.coordinates.slice(0, 3).every(numeric),
+        numeric(f.properties?.mag) &&
+        f.geometry?.coordinates?.length >= 3 &&
+        f.geometry.coordinates.slice(0, 3).every(numeric),
     )
     .map((f) => ({
       id: f.id,
@@ -35,6 +37,8 @@ export function normalizeWorldBank(raw) {
     }))
     .sort((a, b) => a.time - b.time || a.country.localeCompare(b.country));
 }
+const numberOrMissing = (value) => (numeric(value) ? Number(value) : undefined);
+
 export function normalizeForecast(raw, variable) {
   const cities = ['New York', 'London', 'Mumbai', 'Singapore', 'São Paulo'];
   return (Array.isArray(raw) ? raw : [raw]).flatMap((r, cityIndex) => {
@@ -56,9 +60,9 @@ export function normalizeForecast(raw, variable) {
               city: Array.isArray(raw) ? cities[cityIndex] : 'New York',
               lat: r.latitude,
               lon: r.longitude,
-              wind: +r.hourly.wind_speed_10m?.[i],
-              direction: +r.hourly.wind_direction_10m?.[i],
-              humidity: +r.hourly.relative_humidity_2m?.[i],
+              wind: numberOrMissing(r.hourly.wind_speed_10m?.[i]),
+              direction: numberOrMissing(r.hourly.wind_direction_10m?.[i]),
+              humidity: numberOrMissing(r.hourly.relative_humidity_2m?.[i]),
             },
           ]
         : [],
@@ -82,15 +86,19 @@ export function normalizeBooks(raw) {
     }))
     .sort((a, b) => b.value - a.value);
 }
+export function eventCategories(event, mode = 'all') {
+  const titles = [
+    ...new Set((event.categories || []).map((c) => c.title).filter(Boolean)),
+  ];
+  if (!titles.length) return ['Other'];
+  return mode === 'first' ? titles.slice(0, 1) : titles;
+}
 export function normalizeEvents(raw, mode = 'all') {
   if (!Array.isArray(raw.events)) throw Error('NASA events missing');
   const counts = new Map();
-  for (const event of raw.events) {
-    let cats = [...new Set((event.categories || []).map((c) => c.title))];
-    if (!cats.length) cats = ['Other'];
-    if (mode === 'first') cats = cats.slice(0, 1);
-    for (const label of cats) counts.set(label, (counts.get(label) || 0) + 1);
-  }
+  for (const event of raw.events)
+    for (const label of eventCategories(event, mode))
+      counts.set(label, (counts.get(label) || 0) + 1);
   return [...counts]
     .map(([label, value]) => ({ label, value }))
     .sort((a, b) => b.value - a.value);
@@ -152,7 +160,10 @@ export async function loadDataset(key, signal) {
               ? raw.docs.length
               : key === 'events'
                 ? raw.events.length
-                : rows.length,
+                : (Array.isArray(raw) ? raw : [raw]).reduce(
+                    (count, location) => count + location.hourly.time.length,
+                    0,
+                  ),
       omitted: 0,
     },
   };

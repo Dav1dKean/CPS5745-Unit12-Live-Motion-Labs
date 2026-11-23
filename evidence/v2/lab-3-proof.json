@@ -1,0 +1,20 @@
+{
+  "id": 3,
+  "source": {
+    "name": "Open-Meteo",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7&longitude=-74.0&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+    "docs": "https://open-meteo.com/en/docs",
+    "license": "Open-Meteo weather data: CC BY 4.0 attribution.",
+    "unit": "°C",
+    "key": "temperature",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:46:54.520Z",
+    "providerDate": "Mon, 23 Nov 2026 01:46:54 GMT",
+    "providerAge": null,
+    "sha256": "74fd7ccf19560340f86d16589087ba201141d6b9e0f2fc7de942b574618463f0"
+  },
+  "selectedRecords": 48,
+  "scene": "Forecast wind atelier",
+  "animationFrames": 64,
+  "pageErrors": []
+}

@@ -1,6 +1,6 @@
 import { createSignal, onMount, onCleanup, createEffect, Show } from 'solid-js';
 import { watchLive, recentYears } from './shared/sources.js';
-import { draw } from './shared/lab.js';
+import { draw, stopExperience } from './shared/lab.js';
 export default function App() {
   let chart, stop;
   const [packet, setPacket] = createSignal(null),
@@ -11,7 +11,7 @@ export default function App() {
     stop?.();
     setError('');
     setPacket(null);
-    chart?.replaceChildren();
+    if (chart) stopExperience(chart);
     stop = watchLive(
       key,
       (p) => {
@@ -25,7 +25,10 @@ export default function App() {
     );
   }
   onMount(() => load('growth'));
-  onCleanup(() => stop?.());
+  onCleanup(() => {
+    stop?.();
+    if (chart) stopExperience(chart);
+  });
   createEffect(() => {
     const p = packet(),
       n = years(),

@@ -136,9 +136,52 @@ export function economy(node, packet, rows) {
       update();
     },
   );
+  const crossings = groups.flatMap((group) =>
+    group.pairs
+      .filter((p) => p.x * p.y < 0)
+      .map((point) => ({ group, point, id: `${group.id}:${point.year}` })),
+  );
+  const crossingLayer = svg.append('g').attr('pointer-events', 'none');
+  const marker = crossingLayer
+    .append('circle')
+    .attr('r', 16)
+    .attr('fill', 'none')
+    .attr('stroke', '#172f3b')
+    .attr('stroke-width', 3)
+    .attr('display', 'none');
+  let crossing = null;
+  scene.choose(
+    'GDP growth sign change',
+    [
+      ['', 'Choose a crossing'],
+      ...crossings.map(({ group, point, id }) => [
+        id,
+        `${group.name} · ${point.year - 1} to ${point.year}`,
+      ]),
+    ],
+    (id) => {
+      crossing = crossings.find((candidate) => candidate.id === id);
+      pin = crossing?.group.id ?? null;
+      if (crossing) {
+        playing = false;
+        index = years.indexOf(crossing.point.year);
+      }
+      update();
+      render(1, scene.probe.time);
+    },
+  );
   function update() {
     const year = years[index];
-    yearLabel.text(year);
+    yearLabel.text(year ?? '');
+    const highlighted = crossing?.point.year === year ? crossing : null;
+    marker.attr('display', highlighted ? null : 'none');
+    if (highlighted)
+      marker.attr('cx', x(highlighted.point.x)).attr('cy', y(highlighted.point.y));
+    const description = highlighted
+      ? `${highlighted.group.name} · ${year - 1}: ${highlighted.point.x}% → ${year}: ${highlighted.point.y}% annual real GDP growth.`
+      : `${crossings.length} consecutive-year sign changes in the filtered history. Zero rates sit on an axis.`;
+    scene.report(description);
+    scene.probe.crossing = highlighted?.id ?? null;
     timeline.set(index, year);
     for (const g of groups) {
       g.point = g.pairs.find((p) => p.year === year);
@@ -175,7 +218,11 @@ export function economy(node, packet, rows) {
       clock = 0;
       update();
     }
+    render(dt, t);
+  });
+  function render(dt, t) {
     for (const d of groups) {
+      if (!d.point) continue;
       d.px += (d.tx - d.px) * Math.min(1, dt * 5);
       d.py += (d.ty - d.py) * Math.min(1, dt * 5);
     }
@@ -187,6 +234,6 @@ export function economy(node, packet, rows) {
       .select('circle')
       .attr('r', (d) => (pin === d.id ? 13 + Math.sin(t * 4) * 2 : 10));
     scene.probe.series = groups.length;
-  });
+  }
   return scene;
 }

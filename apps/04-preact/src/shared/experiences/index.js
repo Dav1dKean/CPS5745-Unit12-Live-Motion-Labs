@@ -8,7 +8,9 @@ import { economy } from './economy.js';
 import { rain } from './rain.js';
 const scenes = new WeakMap();
 export function stopExperience(node) {
-  scenes.get(node)?.dispose();
+  const scene = scenes.get(node);
+  scene?.dispose();
+  if (scene && window.__activeScene === scene) window.__activeScene = null;
   scenes.delete(node);
 }
 export function renderExperience(node, packet, rows, options) {
@@ -23,7 +25,7 @@ export function renderExperience(node, packet, rows, options) {
   const id = Number(document.body.dataset.lab),
     engines = [globe, population, weather, books, events, swarm, economy, rain];
   const engine = id === 1 && options.bins ? swarm : engines[id - 1];
-  const scene = engine(node, packet, rows);
+  const scene = engine(node, packet, rows, options);
   scenes.set(node, scene);
   window.__activeScene = scene;
   return scene;

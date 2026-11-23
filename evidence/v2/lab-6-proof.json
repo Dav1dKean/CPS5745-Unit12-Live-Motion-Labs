@@ -1,0 +1,20 @@
+{
+  "id": 6,
+  "source": {
+    "name": "USGS",
+    "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson",
+    "docs": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+    "license": "USGS public-domain data; retain attribution.",
+    "unit": "magnitude; depth in km",
+    "key": "earthquakes",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:47:10.428Z",
+    "providerDate": "Mon, 23 Nov 2026 01:46:26 GMT",
+    "providerAge": "44",
+    "sha256": "78e309dd4abf9a4500111521b7c8a007b8c7c72267ebea8ca16829988c3ba2c6"
+  },
+  "selectedRecords": 216,
+  "scene": "Seismic particle sculpture",
+  "animationFrames": 102,
+  "pageErrors": []
+}

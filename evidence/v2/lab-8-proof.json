@@ -1,0 +1,20 @@
+{
+  "id": 8,
+  "source": {
+    "name": "Open-Meteo",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7,51.5074,19.076,1.3521,-23.5505&longitude=-74.0,-0.1278,72.8777,103.8198,-46.6333&hourly=precipitation&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+    "docs": "https://open-meteo.com/en/docs",
+    "license": "Open-Meteo weather data: CC BY 4.0 attribution.",
+    "unit": "mm",
+    "key": "precipitation",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:47:19.713Z",
+    "providerDate": "Mon, 23 Nov 2026 01:47:19 GMT",
+    "providerAge": null,
+    "sha256": "7a2954edcac8870c48c6ebb21b1d27c0a77d605c7526ec3649a7e8e70ba317b2"
+  },
+  "selectedRecords": 240,
+  "scene": "Rainfall observatory",
+  "animationFrames": 60,
+  "pageErrors": []
+}

@@ -1,0 +1,76 @@
+{
+  "checkedAt": "2026-11-23T01:31:22.272Z",
+  "policy": "Fresh upstream requests; metadata only saved; no response cache or fallback.",
+  "results": [
+    {
+      "key": "earthquakes",
+      "provider": "USGS",
+      "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson",
+      "http": 200,
+      "usableRecords": 325,
+      "fetchedAt": "2026-11-23T01:31:12.025Z",
+      "milliseconds": 374,
+      "sha256": "dc9dfbb3b87a1a0248b92d641e97ba34559bf629c546d4da8450e97c34211e12",
+      "requiresKey": false,
+      "paidService": false
+    },
+    {
+      "key": "population",
+      "provider": "World Bank",
+      "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/SP.POP.TOTL?format=json&per_page=1000&date=1980:2026",
+      "http": 200,
+      "usableRecords": 276,
+      "fetchedAt": "2026-11-23T01:31:12.008Z",
+      "milliseconds": 236,
+      "sha256": "c46decc933615ab1acf1f0260a004c39abdea051f7e18687803ab03f89544ba4",
+      "requiresKey": false,
+      "paidService": false
+    },
+    {
+      "key": "growth",
+      "provider": "World Bank",
+      "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=1000",
+      "http": 200,
+      "usableRecords": 390,
+      "fetchedAt": "2026-11-23T01:31:12.016Z",
+      "milliseconds": 242,
+      "sha256": "7d9924b1ed636ae7bf0f5dabb22d794ae04478585bf95674dfdc48a333260862",
+      "requiresKey": false,
+      "paidService": false
+    },
+    {
+      "key": "temperature",
+      "provider": "Open-Meteo",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7&longitude=-74.0&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+      "http": 200,
+      "usableRecords": 48,
+      "fetchedAt": "2026-11-23T01:31:11.979Z",
+      "milliseconds": 203,
+      "sha256": "74fd7ccf19560340f86d16589087ba201141d6b9e0f2fc7de942b574618463f0",
+      "requiresKey": false,
+      "paidService": false
+    },
+    {
+      "key": "precipitation",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7,51.5074,19.076,1.3521,-23.5505&longitude=-74.0,-0.1278,72.8777,103.8198,-46.6333&hourly=precipitation&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+      "error": "fetch failed"
+    },
+    {
+      "key": "books",
+      "provider": "Open Library",
+      "url": "https://openlibrary.org/search.json?q=data+visualization&limit=70&fields=key,title,first_publish_year,edition_count,author_key,author_name,subject",
+      "http": 200,
+      "usableRecords": 70,
+      "fetchedAt": "2026-11-23T01:31:12.259Z",
+      "milliseconds": 479,
+      "sha256": "d74029d1dbbd7415d83de24af705c15b8f19917b3f36cf9b4e88e793fb114609",
+      "requiresKey": false,
+      "paidService": false
+    },
+    {
+      "key": "events",
+      "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=all&days=60&limit=500",
+      "error": "fetch failed"
+    }
+  ]
+}

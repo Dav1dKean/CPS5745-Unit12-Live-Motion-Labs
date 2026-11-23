@@ -1,0 +1,35 @@
+
+> cps5745-unit12-eight-labs@2.0.0 test:browser
+> playwright test --config .runtime/unit12-playwright.config.mjs --retries 1
+
+
+Running 26 tests using 1 worker
+
+  ✓   1 tests/browser/live-motion.spec.js:25:3 › lab 1: actual live request, custom animated scene, interaction and raw checksum (5.5s)
+  ✓   2 tests/browser/live-motion.spec.js:117:3 › lab 1: no invented/saved fallback when a live source is unavailable (715ms)
+  ✓   3 tests/browser/live-motion.spec.js:132:3 › lab 1: responsive phone viewport, actual live data and canvas exploration control (2.0s)
+  ✓   4 tests/browser/live-motion.spec.js:25:3 › lab 2: actual live request, custom animated scene, interaction and raw checksum (2.4s)
+  ✓   5 tests/browser/live-motion.spec.js:117:3 › lab 2: no invented/saved fallback when a live source is unavailable (750ms)
+  ✓   6 tests/browser/live-motion.spec.js:132:3 › lab 2: responsive phone viewport, actual live data and canvas exploration control (1.1s)
+  ✓   7 tests/browser/live-motion.spec.js:25:3 › lab 3: actual live request, custom animated scene, interaction and raw checksum (2.5s)
+  ✓   8 tests/browser/live-motion.spec.js:117:3 › lab 3: no invented/saved fallback when a live source is unavailable (838ms)
+  ✓   9 tests/browser/live-motion.spec.js:132:3 › lab 3: responsive phone viewport, actual live data and canvas exploration control (1.3s)
+  ✓  10 tests/browser/live-motion.spec.js:25:3 › lab 4: actual live request, custom animated scene, interaction and raw checksum (3.2s)
+  ✓  11 tests/browser/live-motion.spec.js:117:3 › lab 4: no invented/saved fallback when a live source is unavailable (719ms)
+  ✓  12 tests/browser/live-motion.spec.js:132:3 › lab 4: responsive phone viewport, actual live data and canvas exploration control (1.5s)
+  ✓  13 tests/browser/live-motion.spec.js:25:3 › lab 5: actual live request, custom animated scene, interaction and raw checksum (3.6s)
+  ✓  14 tests/browser/live-motion.spec.js:117:3 › lab 5: no invented/saved fallback when a live source is unavailable (685ms)
+  ✓  15 tests/browser/live-motion.spec.js:132:3 › lab 5: responsive phone viewport, actual live data and canvas exploration control (1.5s)
+  ✓  16 tests/browser/live-motion.spec.js:25:3 › lab 6: actual live request, custom animated scene, interaction and raw checksum (3.1s)
+  ✓  17 tests/browser/live-motion.spec.js:117:3 › lab 6: no invented/saved fallback when a live source is unavailable (802ms)
+  ✓  18 tests/browser/live-motion.spec.js:132:3 › lab 6: responsive phone viewport, actual live data and canvas exploration control (1.3s)
+  ✓  19 tests/browser/live-motion.spec.js:25:3 › lab 7: actual live request, custom animated scene, interaction and raw checksum (2.1s)
+  ✓  20 tests/browser/live-motion.spec.js:117:3 › lab 7: no invented/saved fallback when a live source is unavailable (648ms)
+  ✓  21 tests/browser/live-motion.spec.js:132:3 › lab 7: responsive phone viewport, actual live data and canvas exploration control (971ms)
+  ✓  22 tests/browser/live-motion.spec.js:25:3 › lab 8: actual live request, custom animated scene, interaction and raw checksum (2.4s)
+  ✓  23 tests/browser/live-motion.spec.js:117:3 › lab 8: no invented/saved fallback when a live source is unavailable (928ms)
+  ✓  24 tests/browser/live-motion.spec.js:132:3 › lab 8: responsive phone viewport, actual live data and canvas exploration control (1.2s)
+  ✓  25 tests/browser/live-motion.spec.js:155:1 › retired saved-data requests are rejected (81ms)
+  ✓  26 tests/browser/live-motion.spec.js:162:1 › reduced motion gives a real static scene until explicitly played (820ms)
+
+  26 passed (46.1s)

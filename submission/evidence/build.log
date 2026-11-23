@@ -1,0 +1,12 @@
+
+> cps5745-unit12-eight-labs@2.0.0 build
+> node scripts/build-all.mjs
+
+01-vanilla: PASS (6.9s)
+05-lit: PASS (7.3s)
+04-preact: PASS (8.0s)
+08-qwik: PASS (8.0s)
+02-vue: PASS (8.5s)
+07-solid: PASS (8.6s)
+03-react: PASS (9.1s)
+06-svelte: PASS (9.3s)

@@ -1,0 +1,20 @@
+{
+  "id": 5,
+  "source": {
+    "name": "NASA EONET",
+    "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=all&days=60&limit=500",
+    "docs": "https://eonet.gsfc.nasa.gov/docs/v3",
+    "license": "NASA EONET attribution; upstream sources have their own terms.",
+    "unit": "category memberships",
+    "key": "events",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:47:04.833Z",
+    "providerDate": "Mon, 23 Nov 2026 01:47:04 GMT",
+    "providerAge": null,
+    "sha256": "fd6852736ffa8efad13c7737b3b476665df50cb36e6aeb3695bdc4b7ec8b0a5e"
+  },
+  "selectedRecords": 4,
+  "scene": "Natural-event radial atlas",
+  "animationFrames": 109,
+  "pageErrors": []
+}

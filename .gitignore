@@ -13,3 +13,11 @@ public-site/
 data/
 output/*.zip
 .vercel
+
+!/api/data/
+# macOS files
+.DS_Store
+**/.DS_Store
+
+# Generated build evidence
+evidence/builds/

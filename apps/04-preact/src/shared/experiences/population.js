@@ -133,6 +133,49 @@ export function population(node, packet, rows) {
   label(svg, 95, 591, String(years[0]), 12);
   label(svg, 966, 591, String(years.at(-1)), 12);
   label(svg, 95, 446, 'LINKED HISTORY · SAME REPORTING YEARS', 11);
+  let first = grouped[0],
+    second = grouped[1] || first;
+  const choices = grouped.map((d) => [d.id, d.name]);
+  const selectFirst = scene.choose('Compare country A', choices, (id) => {
+    first = grouped.find((d) => d.id === id);
+    compare();
+  });
+  const selectSecond = scene.choose('Compare country B', choices, (id) => {
+    second = grouped.find((d) => d.id === id);
+    compare();
+  });
+  selectSecond.value = second.id;
+  selectFirst.value = first.id;
+  const comparison = history
+    .append('g')
+    .selectAll('circle')
+    .data([0, 1])
+    .join('circle')
+    .attr('r', 6)
+    .attr('stroke', '#223f63')
+    .attr('stroke-width', 2);
+  function compare() {
+    const year = years[index];
+    const records = [first, second].map((country) => ({
+      country,
+      record: country.series.find((row) => row.time === year),
+    }));
+    const format = (value) => value.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    const detail = records.map(
+      ({ country, record }) =>
+        `${country.name} ${record ? format(record.value) + ' people' : 'unreported'}`,
+    );
+    if (records.every(({ record }) => record))
+      detail.push(
+        `Gap ${format(Math.abs(records[0].record.value - records[1].record.value))} people`,
+      );
+    scene.report(`${year} · ${detail.join(' · ')}`);
+    comparison
+      .attr('display', (i) => (records[i].record ? null : 'none'))
+      .attr('cx', sx(year))
+      .attr('cy', (i) => (records[i].record ? sy(records[i].record.value) : null))
+      .attr('fill', (i) => records[i].country.color);
+  }
   const timeline = scene.timeline('Reporting year', 0, years.length - 1, 0, (i) => {
     index = i;
     playing = false;
@@ -150,6 +193,7 @@ export function population(node, packet, rows) {
   function update() {
     const year = years[index];
     hugeYear.text(year);
+    compare();
     timeline.set(index, year);
     for (const d of grouped) {
       const r = d.series.find((r) => r.time === year);

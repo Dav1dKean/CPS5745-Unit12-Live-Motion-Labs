@@ -113,16 +113,42 @@ export function books(node, packet, rows) {
         ? 'Author node; links are catalog work credits'
         : `${d.value} catalog editions · first publication ${d.year || 'not reported'}`,
   );
-  groups.on('click', (_, d) => {
-    pinned = pinned === d.id ? null : d.id;
+  const workPicker = scene.choose(
+    'Pin catalog work',
+    [['', 'Choose a work'], ...rows.map((book) => [book.id, book.label])],
+    (id) => setPin(map.get(id)),
+  );
+  function setPin(d) {
+    pinned = d?.id ?? null;
+    workPicker.value = d?.kind === 'work' ? d.id : '';
+    if (!d) scene.report('Choose a work to keep its catalog details visible.');
+    else if (d.kind === 'work') {
+      const url = /^\/works\/OL\d+W$/.test(d.id)
+        ? new URL(d.id, 'https://openlibrary.org').href
+        : null;
+      const authors = d.authors.map((author) => author.name).join(', ') || 'unreported';
+      scene.report(
+        `${d.label} · ${d.value} editions · authors ${authors} · first published ${d.year ?? 'unreported'}`,
+        url,
+      );
+    } else
+      scene.report(
+        `${d.label} · author · ${edges.filter((edge) => edge.source.id === d.id).length} linked works in this selection`,
+      );
+    scene.probe.pinned = pinned;
+    simulation.alpha(0.25);
+    render(0, scene.probe.time);
+  }
+  groups.on('click keydown', (event, d) => {
+    if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
+    event.preventDefault();
+    setPin(pinned === d.id ? null : d);
     scene.inspect(
       d.label,
       d.kind === 'work'
         ? `${d.value} editions · ${(d.authors || []).map((a) => a.name).join(', ') || 'No author field returned'}`
         : 'Pinned author and connected works',
     );
-    scene.probe.pinned = pinned;
-    simulation.alpha(0.25);
   });
   const zoom = d3
     .zoom()
@@ -140,7 +166,8 @@ export function books(node, packet, rows) {
     (_, i) => (showNames = !!i),
   );
   scene.controls('Network selection', ['Clear pin', 'Reset view'], (_, i) => {
-    ((pinned = null), (showNames = false));
+    showNames = false;
+    setPin();
     if (i) svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
   });
   label(
@@ -180,7 +207,7 @@ export function books(node, packet, rows) {
       )
     );
   }
-  scene.frame((dt, t) => {
+  function render(dt, t) {
     simulation.tick();
     for (const d of nodes) {
       if (!d.fx) {
@@ -214,6 +241,8 @@ export function books(node, packet, rows) {
       );
     scene.probe.nodes = nodes.length;
     scene.probe.edges = edges.length;
-  });
+  }
+  setPin();
+  scene.frame(render);
   return scene;
 }

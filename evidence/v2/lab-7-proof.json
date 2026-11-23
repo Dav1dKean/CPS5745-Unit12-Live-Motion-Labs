@@ -1,0 +1,20 @@
+{
+  "id": 7,
+  "source": {
+    "name": "World Bank",
+    "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=1000",
+    "docs": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+    "license": "World Bank data attribution; consult dataset license.",
+    "unit": "annual %",
+    "key": "growth",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:47:15.718Z",
+    "providerDate": "Mon, 23 Nov 2026 01:47:15 GMT",
+    "providerAge": "36617",
+    "sha256": "7d9924b1ed636ae7bf0f5dabb22d794ae04478585bf95674dfdc48a333260862"
+  },
+  "selectedRecords": 150,
+  "scene": "Economic phase space",
+  "animationFrames": 56,
+  "pageErrors": []
+}

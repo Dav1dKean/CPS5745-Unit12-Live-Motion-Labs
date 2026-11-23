@@ -1,0 +1,18 @@
+
+> cps5745-unit12-eight-labs@2.0.0 test
+> node --test tests/*.test.mjs
+
+✔ missing data is never coerced to zero (2.070099ms)
+✔ USGS requires complete coordinates and preserves depth/magnitude (0.565069ms)
+✔ annual selection keeps all countries, drops missing and rejects incomplete pagination (43.32426ms)
+✔ multi-city hourly forecasts preserve zero and select hours for each city (3.953203ms)
+✔ missing wind readings remain unreported while valid zero is preserved (0.498342ms)
+✔ EONET first-category counts use only the first distinct title (2.040598ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 316.006291

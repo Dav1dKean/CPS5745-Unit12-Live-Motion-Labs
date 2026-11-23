@@ -1,0 +1,393 @@
+{
+  "capturedAt": "2026-11-23T01:46:37.434Z",
+  "tests": [
+    {
+      "id": 1,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "USGS",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson",
+        "docs": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+        "license": "USGS public-domain data; retain attribution.",
+        "unit": "magnitude; depth in km",
+        "key": "earthquakes",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:12.081Z",
+        "providerDate": "Mon, 23 Nov 2026 01:45:26 GMT",
+        "providerAge": "46",
+        "sha256": "6c58022cda23e6e341cfc244186fb790d7fb5724ee34cc42e6634f3f210e8853",
+        "validCount": 324,
+        "rawCount": 324,
+        "omitted": 0,
+        "selectedCount": 216,
+        "selectedFilters": {
+          "minimumMagnitude": 3
+        }
+      },
+      "observation": {
+        "comparison": [
+          {
+            "id": "aka2026xblysq",
+            "label": "200 km S of Akhiok, Alaska",
+            "x": 4.2,
+            "y": 5,
+            "lon": -153.936,
+            "lat": 55.15,
+            "time": 1795267563324,
+            "url": "https://earthquake.usgs.gov/earthquakes/eventpage/aka2026xblysq"
+          },
+          {
+            "id": "us7000tyie",
+            "label": "124 km NE of Quiaca, Peru",
+            "x": 4.3,
+            "y": 626.486,
+            "lon": -68.57,
+            "lat": -13.6058,
+            "time": 1794811654187,
+            "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tyie"
+          }
+        ]
+      },
+      "readout": "us7000tyie · M 4.3 · 626.486 km · 2026-11-16T06:47:34.187Z. Visible."
+    },
+    {
+      "id": 2,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "World Bank",
+        "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/SP.POP.TOTL?format=json&per_page=1000&date=1980:2026",
+        "docs": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+        "license": "World Bank data attribution; consult dataset license.",
+        "unit": "people",
+        "key": "population",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:15.391Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:15 GMT",
+        "providerAge": "36557",
+        "sha256": "c46decc933615ab1acf1f0260a004c39abdea051f7e18687803ab03f89544ba4",
+        "validCount": 276,
+        "rawCount": 276,
+        "omitted": 0,
+        "selectedCount": 150,
+        "selectedFilters": {
+          "lastYears": 25,
+          "metric": "population"
+        }
+      },
+      "observation": {
+        "comparison": [
+          {
+            "label": "China · 2001",
+            "time": 2001,
+            "value": 1271850000,
+            "country": "CHN",
+            "countryName": "China",
+            "year": 2001
+          },
+          {
+            "label": "India · 2001",
+            "time": 2001,
+            "value": 1077898575,
+            "country": "IND",
+            "countryName": "India",
+            "year": 2001
+          },
+          {
+            "label": "China · 2025",
+            "time": 2025,
+            "value": 1406585000,
+            "country": "CHN",
+            "countryName": "China",
+            "year": 2025
+          },
+          {
+            "label": "India · 2025",
+            "time": 2025,
+            "value": 1463865525,
+            "country": "IND",
+            "countryName": "India",
+            "year": 2025
+          }
+        ]
+      },
+      "readout": "2025 · India 1,463,865,525 people · China 1,406,585,000 people · Gap 57,280,525 people"
+    },
+    {
+      "id": 3,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "Open-Meteo",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7&longitude=-74.0&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+        "docs": "https://open-meteo.com/en/docs",
+        "license": "Open-Meteo weather data: CC BY 4.0 attribution.",
+        "unit": "°C",
+        "key": "temperature",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:18.282Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:18 GMT",
+        "providerAge": null,
+        "sha256": "162fff2b7a1cb505286209bc95539332cd85916d51a3bf29de963ad75e1cab68",
+        "validCount": 48,
+        "rawCount": 48,
+        "omitted": 0,
+        "selectedCount": 48,
+        "selectedFilters": {
+          "first24Hours": false
+        }
+      },
+      "observation": {
+        "hours": 43,
+        "start": "2026-11-22T07:00:00.000Z",
+        "end": "2026-11-24T01:00:00.000Z",
+        "comparison": [
+          {
+            "time": "2026-11-24T01:00:00.000Z",
+            "value": 10.5,
+            "wind": 3.89,
+            "direction": 333,
+            "city": "New York"
+          },
+          {
+            "time": "2026-11-23T17:00:00.000Z",
+            "value": 19.4,
+            "wind": 3.47,
+            "direction": 273,
+            "city": "New York"
+          }
+        ]
+      },
+      "readout": "43 forecast hours · Nov 22, 2:00 AM EST – Nov 23, 8:00 PM EST. Warmest 19.4 °C at Nov 23, 12:00 PM EST, 3.47 m/s from 273°. Coolest 10.5 °C at Nov 23, 8:00 PM EST, 3.89 m/s from 333°."
+    },
+    {
+      "id": 4,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "Open Library",
+        "url": "https://openlibrary.org/search.json?q=data+visualization&limit=70&fields=key,title,first_publish_year,edition_count,author_key,author_name,subject",
+        "docs": "https://openlibrary.org/dev/docs/api/search",
+        "license": "Open Library catalog data; retain attribution and original response.",
+        "unit": "editions",
+        "key": "books",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:22.116Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:22 GMT",
+        "providerAge": null,
+        "sha256": "d74029d1dbbd7415d83de24af705c15b8f19917b3f36cf9b4e88e793fb114609",
+        "validCount": 70,
+        "rawCount": 70,
+        "omitted": 0,
+        "selectedCount": 32,
+        "selectedFilters": {
+          "topN": 32,
+          "query": "data visualization"
+        }
+      },
+      "observation": {
+        "book": {
+          "id": "/works/OL2824012W",
+          "label": "The Visual Display of Quantitative Information",
+          "value": 14,
+          "year": 1983,
+          "authors": [
+            {
+              "id": "OL421269A",
+              "name": "Edward R. Tufte"
+            }
+          ],
+          "subjects": [
+            "Diagramm",
+            "Audio-visual aids",
+            "Estatistica Descritiva",
+            "Statistics",
+            "Tableaux, graphiques"
+          ]
+        }
+      },
+      "readout": "The Visual Display of Quantitative Information · 14 editions · authors Edward R. Tufte · first published 1983 · Open Library catalog record"
+    },
+    {
+      "id": 5,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "NASA EONET",
+        "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=all&days=60&limit=500",
+        "docs": "https://eonet.gsfc.nasa.gov/docs/v3",
+        "license": "NASA EONET attribution; upstream sources have their own terms.",
+        "unit": "category memberships",
+        "key": "events",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:25.614Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:25 GMT",
+        "providerAge": null,
+        "sha256": "fd6852736ffa8efad13c7737b3b476665df50cb36e6aeb3695bdc4b7ec8b0a5e",
+        "validCount": 4,
+        "rawCount": 500,
+        "omitted": 0,
+        "selectedCount": 4,
+        "selectedFilters": {
+          "categories": 12,
+          "countMode": "all"
+        }
+      },
+      "observation": {
+        "distinct": 500,
+        "all": 500,
+        "first": 500,
+        "displayedAll": 150,
+        "displayedFirst": 150,
+        "examples": []
+      },
+      "readout": "500 distinct source event IDs · 500 all-category memberships · 500 first-category assignments · 150 dated events drawn. Request cap 500. Display cap 150."
+    },
+    {
+      "id": 6,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "USGS",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson",
+        "docs": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+        "license": "USGS public-domain data; retain attribution.",
+        "unit": "magnitude; depth in km",
+        "key": "earthquakes",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:29.163Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:26 GMT",
+        "providerAge": "3",
+        "sha256": "78e309dd4abf9a4500111521b7c8a007b8c7c72267ebea8ca16829988c3ba2c6",
+        "validCount": 324,
+        "rawCount": 324,
+        "omitted": 0,
+        "selectedCount": 216,
+        "selectedFilters": {
+          "minimumMagnitude": 3
+        }
+      },
+      "observation": {
+        "event": {
+          "id": "aka2026xdlzci",
+          "label": "52 km W of Happy Valley, Alaska",
+          "x": 3.6,
+          "y": 101.2,
+          "lon": -152.675,
+          "lat": 59.996,
+          "time": 1795361121414,
+          "url": "https://earthquake.usgs.gov/earthquakes/eventpage/aka2026xdlzci"
+        },
+        "exampleBrushedIds": [
+          "us6000ucv4",
+          "us6000ucv2",
+          "us6000ucv1",
+          "us6000ucuj",
+          "us6000ucu8"
+        ],
+        "brushedCount": 158,
+        "layouts": [
+          "swarm",
+          "bins"
+        ]
+      },
+      "readout": "Tracked aka2026xdlzci · M 3.6 · 101.2 km. Brushed 158 IDs: us6000ucv4, us6000ucv2, us6000ucv1, us6000ucuj, us6000ucu8, …"
+    },
+    {
+      "id": 7,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "World Bank",
+        "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=1000",
+        "docs": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+        "license": "World Bank data attribution; consult dataset license.",
+        "unit": "annual %",
+        "key": "growth",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:32.493Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:32 GMT",
+        "providerAge": "36574",
+        "sha256": "7d9924b1ed636ae7bf0f5dabb22d794ae04478585bf95674dfdc48a333260862",
+        "validCount": 390,
+        "rawCount": 396,
+        "omitted": 0,
+        "selectedCount": 150,
+        "selectedFilters": {
+          "lastYears": 25,
+          "metric": "growth"
+        }
+      },
+      "observation": {
+        "comparison": [
+          {
+            "label": "United States · 2019",
+            "time": 2019,
+            "value": 2.58382533052225,
+            "country": "USA",
+            "countryName": "United States",
+            "year": 2019
+          },
+          {
+            "label": "United States · 2020",
+            "time": 2020,
+            "value": -2.081375977796,
+            "country": "USA",
+            "countryName": "United States",
+            "year": 2020
+          }
+        ]
+      },
+      "readout": "United States · 2019: 2.58382533052225% → 2020: -2.081375977796% annual real GDP growth."
+    },
+    {
+      "id": 8,
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "controlledOutage": "PASS",
+      "source": {
+        "name": "Open-Meteo",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7,51.5074,19.076,1.3521,-23.5505&longitude=-74.0,-0.1278,72.8777,103.8198,-46.6333&hourly=precipitation&forecast_days=2&timezone=America%2FNew_York&timeformat=unixtime",
+        "docs": "https://open-meteo.com/en/docs",
+        "license": "Open-Meteo weather data: CC BY 4.0 attribution.",
+        "unit": "mm",
+        "key": "precipitation",
+        "mode": "live",
+        "fetchedAt": "2026-11-23T01:46:35.220Z",
+        "providerDate": "Mon, 23 Nov 2026 01:46:35 GMT",
+        "providerAge": null,
+        "sha256": "716e9afb2aedc926ad2341ea1d605c3308a65fd5408bd8f09eadf43226837f86",
+        "validCount": 240,
+        "rawCount": 240,
+        "omitted": 0,
+        "selectedCount": 240,
+        "selectedFilters": {
+          "firstHours": 48
+        }
+      },
+      "observation": {
+        "comparison": [
+          {
+            "time": "2026-11-22T10:00:00.000Z",
+            "value": 0,
+            "city": "Singapore"
+          },
+          {
+            "time": "2026-11-23T07:00:00.000Z",
+            "value": 3.4,
+            "city": "Singapore"
+          }
+        ]
+      },
+      "readout": "Nov 23, 2:00 AM EST · New York 0 mm · London 0 mm · Mumbai 0 mm · Singapore 3.4 mm · São Paulo 0 mm"
+    }
+  ]
+}

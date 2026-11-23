@@ -1,26 +1,29 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { watchLive, firstHours } from './shared/sources.js';
-import { draw } from './shared/lab.js';
+import { draw, stopExperience } from './shared/lab.js';
 export default function App() {
   const chart = useRef(null),
     [packet, setPacket] = useState(null),
     [error, setError] = useState(''),
     [firstDayOnly, setFirstDayOnly] = useState(false);
-  useEffect(
-    () =>
-      watchLive(
-        'temperature',
-        (p) => {
-          setError('');
-          setPacket(p);
-        },
-        (e) => {
-          setPacket(null);
-          setError(e.message);
-        },
-      ),
-    [],
-  );
+  useEffect(() => {
+    const node = chart.current;
+    const stop = watchLive(
+      'temperature',
+      (p) => {
+        setError('');
+        setPacket(p);
+      },
+      (e) => {
+        setPacket(null);
+        setError(e.message);
+      },
+    );
+    return () => {
+      stop();
+      if (node) stopExperience(node);
+    };
+  }, []);
   const shown = useMemo(
     () => (packet ? (firstDayOnly ? firstHours(packet, 24) : packet.rows) : []),
     [packet, firstDayOnly],
@@ -30,6 +33,7 @@ export default function App() {
       draw(chart.current, packet, shown, {
         kind: 'line',
         title: 'NYC hourly air temperature',
+        unit: '°C; m/s; direction in degrees; relative humidity in %',
         filters: { first24Hours: firstDayOnly },
         limitation:
           'A model forecast is not an observed measurement or a climate trend. ' +

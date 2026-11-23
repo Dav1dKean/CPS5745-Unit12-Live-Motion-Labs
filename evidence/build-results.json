@@ -1,0 +1,42 @@
+[
+  {
+    "lab": "01-vanilla",
+    "exitCode": 0,
+    "seconds": 6.284
+  },
+  {
+    "lab": "02-vue",
+    "exitCode": 0,
+    "seconds": 8.234
+  },
+  {
+    "lab": "03-react",
+    "exitCode": 0,
+    "seconds": 8.702
+  },
+  {
+    "lab": "04-preact",
+    "exitCode": 0,
+    "seconds": 7.575
+  },
+  {
+    "lab": "05-lit",
+    "exitCode": 0,
+    "seconds": 6.686
+  },
+  {
+    "lab": "06-svelte",
+    "exitCode": 0,
+    "seconds": 8.906
+  },
+  {
+    "lab": "07-solid",
+    "exitCode": 0,
+    "seconds": 7.941
+  },
+  {
+    "lab": "08-qwik",
+    "exitCode": 0,
+    "seconds": 7.881
+  }
+]

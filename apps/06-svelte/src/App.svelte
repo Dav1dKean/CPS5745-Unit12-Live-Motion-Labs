@@ -1,13 +1,14 @@
 <script>
   import { onMount, untrack } from 'svelte';
   import { watchLive } from './shared/sources.js';
-  import { draw } from './shared/lab.js';
+  import { draw, stopExperience } from './shared/lab.js';
   let chart = $state(null),
     packet = $state(null),
     minimum = $state(3),
     error = $state('');
-  onMount(() =>
-    watchLive(
+  onMount(() => {
+    const node = chart;
+    const stop = watchLive(
       'earthquakes',
       (p) => {
         packet = p;
@@ -17,8 +18,12 @@
         packet = null;
         error = e.message;
       },
-    ),
-  );
+    );
+    return () => {
+      stop();
+      if (node) stopExperience(node);
+    };
+  });
   $effect(() => {
     const p = packet,
       min = Number(minimum),

@@ -1,6 +1,6 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { watchLive, firstHours } from './shared/sources.js';
-import { draw } from './shared/lab.js';
+import { draw, stopExperience } from './shared/lab.js';
 export const App = component$(() => {
   const chart = useSignal(),
     packet = useSignal(null),
@@ -8,6 +8,7 @@ export const App = component$(() => {
     error = useSignal(''),
     timing = useSignal('Waiting for component visibility');
   useVisibleTask$(({ cleanup }) => {
+    const node = chart.value;
     const stop = watchLive(
       'precipitation',
       (p) => {
@@ -20,7 +21,10 @@ export const App = component$(() => {
         error.value = e.message;
       },
     );
-    cleanup(stop);
+    cleanup(() => {
+      stop();
+      if (node) stopExperience(node);
+    });
   });
   useVisibleTask$(({ track }) => {
     const p = track(() => packet.value),

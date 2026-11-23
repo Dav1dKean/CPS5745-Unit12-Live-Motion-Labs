@@ -1,24 +1,89 @@
-﻿import { labs } from './labs.mjs';
-const names = [
-  'Seismic globe',
-  'Population choreography',
-  'Forecast wind atelier',
-  'Author–work constellation',
-  'Natural-event radial atlas',
-  'Seismic particle sculpture',
-  'Economic phase space',
-  'Rainfall observatory',
+import { labs } from './labs.mjs';
+import { COURSE, STARTER_CREDIT, STARTER_URL, STUDENT_NAME } from '../shared/identity.js';
+
+const cards = [
+  ['Seismic globe', 'USGS', 'Orbit the globe and compare earthquake depths.'],
+  [
+    'Population choreography',
+    'World Bank',
+    'Scrub annual data and compare two countries.',
+  ],
+  [
+    'Forecast wind atelier',
+    'Open-Meteo',
+    'Brush a forecast interval and inspect temperature and wind.',
+  ],
+  [
+    'Author–work constellation',
+    'Open Library',
+    'Pin a title and trace its catalog author credits.',
+  ],
+  [
+    'Natural-event radial atlas',
+    'NASA EONET',
+    'Compare category counts and orbit recent events.',
+  ],
+  [
+    'Seismic particle sculpture',
+    'USGS',
+    'Follow selected earthquakes through three layouts.',
+  ],
+  [
+    'Economic phase space',
+    'World Bank',
+    'Trace GDP growth and jump to years with sign changes.',
+  ],
+  [
+    'Rainfall observatory',
+    'Open-Meteo',
+    'Compare hourly precipitation across five cities.',
+  ],
 ];
-const mechanisms = [
-  'Orbit / event replay / depth',
-  'Force packing / annual playback',
-  'Wind advection / linked brushing',
-  'Bipartite physics / drag / pin',
-  'Bundled links / radial explode',
-  'Swarm → bins → depth orbit',
-  'Country trails / time navigation',
-  '3D rain / orbit / wettest-hour hunt',
-];
-export function hubHTML() {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Motion Labs · CPS 5745</title><style>*{box-sizing:border-box}body{margin:0;background:#f6f8fc;color:#213b60;font-family:Inter,Segoe UI,Arial,sans-serif}a{color:inherit}header{max-width:1440px;margin:auto;padding:45px 32px 20px}.eyebrow{font-size:11px;letter-spacing:.2em;color:#8b6ab5;font-weight:800}h1{font-size:clamp(36px,5vw,67px);letter-spacing:-.06em;max-width:1000px;line-height:1.08;margin:16px 0}header p{color:#7b8ca3;max-width:800px;line-height:1.7}.top{display:flex;gap:25px;font-size:12px;align-items:center}.live{color:#288f72}.live:before{content:'● ';font-size:10px}.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 15px;max-width:1440px;margin:auto;padding:20px 32px 55px}.card{min-width:0;display:block;text-decoration:none;transition:transform .3s;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d}.preview{height:220px;overflow:hidden;background:#fff;clip-path:polygon(24% 0,76% 0,100% 50%,76% 100%,24% 100%,0 50%);filter:drop-shadow(0 10px 15px #27416612);position:relative;border-radius:3px}.preview iframe{width:1100px;height:690px;transform:scale(.30);transform-origin:0 0;border:0;pointer-events:none}.card h2{font-size:18px;letter-spacing:-.02em;margin:14px 0 6px}.card p{font-size:11px;color:#8593a9;line-height:1.6;margin:4px 0}.card .framework{color:#8d70af;font-size:10px;letter-spacing:.08em}.health{font-size:10px;color:#2f9c7a}.card:hover{--ry:5deg;transform:perspective(900px) translateY(-8px) rotateY(var(--ry))}.card:hover h2{color:#8662ac}.info{max-width:1380px;margin:0 auto 40px;border-top:1px solid #dce4ef;padding:20px 0;display:flex;gap:30px;font-size:12px;color:#8b9aaf}.info a{color:#5f78a4}footer{padding:20px 32px;font-size:12px;color:#7f91a9;text-align:center}@media(max-width:1100px){.gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.preview iframe{transform:scale(.27)}}@media(max-width:750px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr));padding:15px;gap:25px 12px}.preview{height:180px}.preview iframe{transform:scale(.22)}header{padding:26px 20px}.info{margin:0 20px 25px;flex-wrap:wrap}}@media(max-width:450px){.gallery{grid-template-columns:1fr}.preview{height:240px}.preview iframe{transform:scale(.33)}.card h2{font-size:22px}.top{gap:14px}}@media(prefers-reduced-motion:reduce){.card{transition:none;transform:none!important}}</style></head><body><header><div class="top"><span class="eyebrow">CPS 5745 / D3 × 8 FRAMEWORKS</span><span class="live">FREE APIS · LIVE REQUESTS ONLY</span></div><h1>Data you can<br>move through.</h1><p>Eight custom JavaScript worlds. Orbit, drag, brush, pin and play your way through actual public data. These are live embedded labs, not screenshot thumbnails.</p></header><main class="gallery">${labs.map((lab, i) => `<a class="card" href="http://127.0.0.1:${lab.port}" target="_blank" rel="noreferrer"><div class="preview"><iframe loading="lazy" src="http://127.0.0.1:${lab.port}/?embed=1" title="Live ${names[i]} preview" tabindex="-1"></iframe></div><h2>${names[i]} ↗</h2><p class="framework">0${i + 1} / ${lab.framework.toUpperCase()} / PORT ${lab.port}</p><p>${mechanisms[i]}</p><span class="health" data-lab="${lab.id}">Connecting to the real provider…</span></a>`).join('')}</main><div class="info"><a href="/assignment">Beginner guide + complete source</a><a href="/guide.pdf">Printable assignment</a><a href="/verification">Live verification evidence</a><span>Motion is a visual encoding, not invented observations.</span></div><footer>No saved-data mode. No fallback snapshots. No paid API keys. Provider errors remain visible.</footer><script>window.addEventListener('message',event=>{const d=event.data;if(d?.type!=='lab:ready'||event.origin!=='http://127.0.0.1:'+(5280+Number(d.lab)))return;const el=document.querySelector('[data-lab="'+d.lab+'"]');if(el)el.textContent=d.source+' · '+d.count+' records · fetched '+new Date(d.at).toLocaleTimeString()});document.querySelectorAll('.card').forEach(card=>{card.onpointermove=e=>{const r=card.getBoundingClientRect();card.style.setProperty('--ry',((e.clientX-r.left)/r.width-.5)*9+'deg');card.style.setProperty('--rx',((e.clientY-r.top)/r.height-.5)*-5+'deg')};card.onpointerleave=()=>{card.style.setProperty('--ry','0deg');card.style.setProperty('--rx','0deg')}});</script></body></html>`;
+
+export function hubHTML({ publicBuild = false } = {}) {
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Motion Labs · CPS 5745</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#edf3f5;color:#172f3b;font:1rem/1.5 system-ui,sans-serif}
+header{background:#102d3b;color:#f5fbfb;border-bottom:5px solid #5bd1bb}
+.wrap{max-width:76rem;margin:auto;padding:0 clamp(1rem,4vw,3rem)}
+.hero{padding-block:clamp(2.5rem,7vw,5rem)}
+h1{font-size:clamp(2.75rem,7vw,5.5rem);line-height:.95;letter-spacing:-.065em;margin:.5rem 0 1.25rem}
+.course{color:#9de6d6;font-weight:700}
+.hero p{max-width:48ch}
+nav{display:flex;flex-wrap:wrap;gap:.65rem 1.5rem}
+a{color:inherit;text-underline-offset:.2em}
+:focus-visible{outline:3px solid #167c70;outline-offset:4px}
+header :focus-visible{outline-color:#9de6d6}
+main.wrap{padding-block:2rem}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem}
+.card{display:flex;flex-direction:column;min-width:0;min-height:12rem;background:#fff;border:1px solid #bcced3;border-top:3px solid #278679;border-radius:.5rem;padding:1.15rem;text-decoration:none}
+.card:hover{background:#f5fffc;border-color:#278679}
+.card h2{font-size:1.24rem;line-height:1.2;margin:.5rem 0}
+.card p{color:#3c535e;margin:0 0 .8rem}
+.card .source{color:#1b6259;font-weight:700;font-size:.85rem;margin:0}
+.card .open{margin-top:auto;font-weight:700;text-decoration:underline}
+footer{border-top:1px solid #bcced3;padding-block:1rem 2rem;font-size:.9rem}
+</style></head>
+<body><header><div class="wrap hero">
+<div class="course">${COURSE}</div>
+<h1>Live Motion Labs</h1>
+<p id="author"></p>
+<p>Explore earthquakes, weather, historical statistics, books, and natural events through eight interactive D3 visualizations.</p>
+<nav aria-label="Assignment resources"><a href="/assignment">Assignment guide</a><a href="/guide.pdf">Printable guide</a></nav>
+</div></header>
+<main class="wrap" aria-label="Eight framework labs"><div class="gallery">
+${labs
+  .map((lab, i) => {
+    const [title, provider, description] = cards[i];
+    const href = publicBuild ? `/labs/${lab.id}/` : `http://127.0.0.1:${lab.port}/`;
+    return `<a class="card" href="${href}"><p class="source">${lab.framework} · ${provider}</p><h2>${title}</h2><p>${description}</p><span class="open">Open lab <span aria-hidden="true">↗</span></span></a>`;
+  })
+  .join('\n')}
+</div></main>
+<footer><div class="wrap"><a href="${STARTER_URL}">${STARTER_CREDIT}</a>.</div></footer>
+<script>document.querySelector('#author').textContent=${JSON.stringify(STUDENT_NAME).replaceAll('<', '\\u003c')};</script>
+</body></html>`;
 }

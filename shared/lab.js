@@ -1,3 +1,4 @@
+import { COURSE, STARTER_CREDIT, STARTER_URL, STUDENT_NAME } from './identity.js';
 import { renderExperience, stopExperience } from './experiences/index.js';
 import { element as e, download, statistics, aiPanel } from './evidence.js';
 export const titles = [
@@ -35,16 +36,12 @@ export function installShell(id) {
   if (new URLSearchParams(location.search).has('embed'))
     document.body.classList.add('embedded');
   document.title = `Lab ${id} · ${titles[id - 1]}`;
+  const home = import.meta.env.BASE_URL.startsWith('/labs/')
+    ? ''
+    : 'http://127.0.0.1:5280';
   document.querySelector('#shell').innerHTML =
-    `<header><div class="wrap"><div class="topline"><a href="${location.pathname.startsWith('/labs/') ? '/' : 'http://127.0.0.1:5280'}">← LIVE MOTION LABS</a><span class="eyebrow">CPS 5745 / ${frameworks[id - 1]} / 0${id}</span></div><h1>${titles[id - 1]}</h1><p class="sub">${descriptions[id - 1]}</p><label class="student">Student name <input id="student-name" type="text" placeholder="Your name" maxlength="80"><span id="student-label"></span></label></div></header><main class="wrap"><div class="mode-row"><span class="pill" id="data-badge">FETCHING LIVE SOURCE</span><span id="request-status" role="status">A fresh network request is required.</span><button id="reload-data">Fetch fresh data</button><a href="${location.pathname.startsWith('/labs/') ? '/assignment' : 'http://127.0.0.1:5280/assignment'}">How this works / source code</a></div><div id="app"></div><section id="evidence"></section></main><footer><div class="wrap">Live-only public APIs. No stored responses, disk cache or synthetic measurements. Animated layouts illustrate the retrieved data; they do not invent new observations.</div></footer>`;
-  const input = document.querySelector('#student-name');
-  input.addEventListener(
-    'input',
-    () =>
-      (document.querySelector('#student-label').textContent = input.value
-        ? 'Student: ' + input.value
-        : ''),
-  );
+    `<header><div class="wrap"><div class="topline"><a href="${home}/">← LIVE MOTION LABS</a><span class="eyebrow">${COURSE} · ${frameworks[id - 1]}</span></div><h1>${titles[id - 1]}</h1><p class="sub">${descriptions[id - 1]}</p><p class="student" id="student-label"></p></div></header><main class="wrap"><div class="mode-row"><span class="pill" id="data-badge">FETCHING LIVE SOURCE</span><span id="request-status" role="status">A fresh network request is required.</span><button id="reload-data">Fetch fresh data</button><a href="${home}/assignment">How this works / source code</a></div><div id="app"></div><section id="evidence"></section></main><footer><div class="wrap"><a href="${STARTER_URL}">${STARTER_CREDIT}</a>.</div></footer>`;
+  document.querySelector('#student-label').textContent = STUDENT_NAME;
   document.querySelector('#reload-data').onclick = () =>
     window.dispatchEvent(new Event('lab:refresh'));
   document.addEventListener('lab:request', (event) => {
@@ -83,6 +80,8 @@ export function installShell(id) {
     { once: true },
   );
 }
+export { stopExperience };
+
 export function setStatus(node, message, error = false) {
   node.textContent = message;
   node.className = error ? 'error' : 'status';
@@ -105,17 +104,6 @@ export function draw(node, packet, shown, options) {
       limitation: options.limitation,
     };
   window.__labState = { rows: shown, summary, meta, context };
-  if (window.parent !== window)
-    window.parent.postMessage(
-      {
-        type: 'lab:ready',
-        lab: Number(document.body.dataset.lab),
-        count: shown.length,
-        at: meta.fetchedAt,
-        source: meta.name,
-      },
-      location.pathname.startsWith('/labs/') ? location.origin : 'http://127.0.0.1:5280',
-    );
   const panel = document.querySelector('#evidence');
   panel.replaceChildren();
   const details = e('details', '', panel);
@@ -126,6 +114,13 @@ export function draw(node, packet, shown, options) {
     `${meta.name} · ${shown.length} selected records · request completed ${meta.fetchedAt}.`,
     details,
   );
+  e(
+    'p',
+    `Units: ${context.unit} · ${meta.rawCount} source records · ${meta.validCount} valid records or categories.`,
+    details,
+  );
+  const checksum = e('p', `SHA-256: ${meta.sha256}`, details);
+  checksum.className = 'checksum';
   const a = e('a', meta.url, details);
   a.href = meta.url;
   a.target = '_blank';

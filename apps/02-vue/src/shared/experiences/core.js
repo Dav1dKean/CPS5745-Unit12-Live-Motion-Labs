@@ -144,6 +144,41 @@ export function createScene(node, title, subtitle) {
     toolbar.insertBefore(group, pause);
     return group;
   };
+  const investigation = document.createElement('fieldset');
+  investigation.className = 'scene-investigation';
+  const heading = document.createElement('legend');
+  heading.textContent = 'Investigation';
+  investigation.append(heading);
+  node.append(investigation);
+  const choose = (name, choices, onChange) => {
+    const wrapper = document.createElement('label');
+    wrapper.textContent = name;
+    const select = document.createElement('select');
+    select.setAttribute('aria-label', name);
+    for (const [value, text] of choices) select.add(new Option(text, value));
+    select.onchange = () => {
+      onChange(select.value);
+      achieve(0);
+      achieve(2);
+      probe.missions = [...done];
+    };
+    wrapper.append(select);
+    investigation.append(wrapper);
+    return select;
+  };
+  const readout = document.createElement('p');
+  readout.className = 'investigation-result';
+  investigation.append(readout);
+  const report = (text, link) => {
+    investigation.append(readout);
+    readout.textContent = text;
+    if (link) {
+      const a = document.createElement('a');
+      a.href = link;
+      a.textContent = 'Open Library catalog record';
+      readout.append(' · ', a);
+    }
+  };
   const inspect = (heading, detail) => {
     inspector.replaceChildren();
     const strong = document.createElement('strong');
@@ -191,6 +226,8 @@ export function createScene(node, title, subtitle) {
     toolbar,
     probe,
     inspect,
+    choose,
+    report,
     controls,
     timeline,
     achieve,
@@ -232,7 +269,8 @@ export function hover(selection, scene, title, detail) {
       scene.achieve(0);
     })
     .on('click keydown', (e, d) => {
-      if (e.type === 'click' || e.key === 'Enter') {
+      if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
         scene.inspect(title(d), detail(d));
         scene.probe.pinned = d.id || title(d);
       }

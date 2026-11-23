@@ -41,7 +41,8 @@ export function globe(node, packet, rows) {
   let progress = 1,
     auto = true,
     rotation = [65, -18],
-    style = 'Depth needles';
+    style = 'Depth needles',
+    selected = null;
   const spokes = svg
     .append('g')
     .selectAll('line')
@@ -55,7 +56,6 @@ export function globe(node, packet, rows) {
     .data(rows)
     .join('circle')
     .attr('class', 'quake-node')
-    .attr('fill', (d) => d3.interpolateTurbo(Math.max(0, Math.min(1, d.y / 650))))
     .attr('stroke', '#fff')
     .attr('stroke-width', 1);
   const pulses = svg
@@ -96,7 +96,9 @@ export function globe(node, packet, rows) {
   label(svg, 760, 75, 'THE EARTH, IN MOTION', 12, '#ce774a');
   label(svg, 760, 113, String(rows.length), 52, '#223f63');
   label(svg, 760, 142, 'earthquakes in the current filter');
-  label(svg, 760, 191, 'Color = hypocenter depth');
+  const depthColor = d3.scaleSequential(d3.interpolateTurbo).domain([0, 650]).clamp(true);
+  marks.attr('fill', (d) => depthColor(d.y));
+  label(svg, 760, 191, 'Color = hypocenter depth (km)');
   for (let i = 0; i < 70; i++)
     svg
       .append('rect')
@@ -104,8 +106,32 @@ export function globe(node, packet, rows) {
       .attr('y', 210)
       .attr('width', 3.3)
       .attr('height', 9)
-      .attr('fill', d3.interpolateTurbo(i / 70));
-  label(svg, 760, 244, '0 km                         650+ km', 12);
+      .attr('fill', depthColor((i * 650) / 69));
+  const depthAxis = d3.scaleLinear().domain([0, 650]).range([760, 970]);
+  svg
+    .append('g')
+    .attr('transform', 'translate(0,219)')
+    .call(
+      d3
+        .axisBottom(depthAxis)
+        .tickValues([0, 100, 300, 500, 650])
+        .tickFormat((d) => (d === 650 ? '650+' : d)),
+    );
+  const options = sorted.map((d) => [d.id, `M ${d.x} · ${d.y} km · ${d.label}`]);
+  scene.choose(
+    'Center on earthquake',
+    [['', 'Choose an earthquake'], ...options],
+    (id) => {
+      selected = rows.find((d) => d.id === id);
+      if (selected) {
+        auto = false;
+        progress = 1;
+        timeline.set(100);
+        rotation = [-selected.lon, -selected.lat];
+      }
+      render(0);
+    },
+  );
   label(svg, 760, 297, 'Ring motion is a visual locator.', 13);
   label(svg, 760, 320, 'It is not a wave-speed simulation.', 13);
   label(svg, 760, 375, 'Drag to rotate the sphere.', 15, '#223f63');
@@ -127,7 +153,19 @@ export function globe(node, packet, rows) {
         progress * ((sorted.at(-1)?.time || 0) - (sorted[0]?.time || 0));
     const visible = (d) =>
       d3.geoDistance([d.lon, d.lat], inv) < Math.PI / 2 && d.time <= cut;
+    const report = selected ? `${selected.id}:${visible(selected)}` : '';
+    if (report !== scene.probe.depthSelection && selected)
+      scene.report(
+        `${selected.id} · M ${selected.x} · ${selected.y} km · ${new Date(selected.time).toISOString()}. ${visible(selected) ? 'Visible' : 'Occluded or outside the selected time window'}.`,
+      );
+    if (report !== scene.probe.depthSelection && !selected)
+      scene.report(
+        'Choose an earthquake to center it. Rotate the globe to see when the far hemisphere hides the mark.',
+      );
+    scene.probe.depthSelection = report;
     marks
+      .attr('stroke', (d) => (d === selected ? '#182c49' : '#fff'))
+      .attr('stroke-width', (d) => (d === selected ? 3 : 1))
       .attr('display', (d) => (visible(d) ? null : 'none'))
       .attr('cx', (d) => projection([d.lon, d.lat])[0])
       .attr('cy', (d) => projection([d.lon, d.lat])[1])

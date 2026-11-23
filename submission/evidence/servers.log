@@ -1,0 +1,17 @@
+
+> cps5745-unit12-eight-labs@2.0.0 check:servers
+> node scripts/check-servers.mjs --wait
+
+PASS: all eight assigned ports return HTTP 200.
+┌─────────┬──────────────┬─────────────────────────┬───────┐
+│ (index) │ lab          │ url                     │ ready │
+├─────────┼──────────────┼─────────────────────────┼───────┤
+│ 0       │ '01-vanilla' │ 'http://127.0.0.1:5281' │ true  │
+│ 1       │ '02-vue'     │ 'http://127.0.0.1:5282' │ true  │
+│ 2       │ '03-react'   │ 'http://127.0.0.1:5283' │ true  │
+│ 3       │ '04-preact'  │ 'http://127.0.0.1:5284' │ true  │
+│ 4       │ '05-lit'     │ 'http://127.0.0.1:5285' │ true  │
+│ 5       │ '06-svelte'  │ 'http://127.0.0.1:5286' │ true  │
+│ 6       │ '07-solid'   │ 'http://127.0.0.1:5287' │ true  │
+│ 7       │ '08-qwik'    │ 'http://127.0.0.1:5288' │ true  │
+└─────────┴──────────────┴─────────────────────────┴───────┘

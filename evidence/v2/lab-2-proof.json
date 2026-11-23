@@ -1,0 +1,20 @@
+{
+  "id": 2,
+  "source": {
+    "name": "World Bank",
+    "url": "https://api.worldbank.org/v2/country/USA;CHN;IND;BRA;DEU;NGA/indicator/SP.POP.TOTL?format=json&per_page=1000&date=1980:2026",
+    "docs": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+    "license": "World Bank data attribution; consult dataset license.",
+    "unit": "people",
+    "key": "population",
+    "mode": "live",
+    "fetchedAt": "2026-11-23T01:46:50.052Z",
+    "providerDate": "Mon, 23 Nov 2026 01:46:50 GMT",
+    "providerAge": "36592",
+    "sha256": "c46decc933615ab1acf1f0260a004c39abdea051f7e18687803ab03f89544ba4"
+  },
+  "selectedRecords": 150,
+  "scene": "Population choreography",
+  "animationFrames": 67,
+  "pageErrors": []
+}

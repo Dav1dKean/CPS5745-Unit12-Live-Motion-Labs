@@ -1,0 +1,118 @@
+
+> cps5745-unit12-eight-labs@2.0.0 test:browser
+> playwright test --config .runtime/unit12-playwright.config.mjs
+
+
+Running 26 tests using 1 worker
+
+  ✘   1 tests/browser/live-motion.spec.js:25:3 › lab 1: actual live request, custom animated scene, interaction and raw checksum (5.6s)
+  ✓   2 tests/browser/live-motion.spec.js:117:3 › lab 1: no invented/saved fallback when a live source is unavailable (1.0s)
+  ✓   3 tests/browser/live-motion.spec.js:132:3 › lab 1: responsive phone viewport, actual live data and canvas exploration control (5.8s)
+  ✓   4 tests/browser/live-motion.spec.js:25:3 › lab 2: actual live request, custom animated scene, interaction and raw checksum (4.3s)
+  ✓   5 tests/browser/live-motion.spec.js:117:3 › lab 2: no invented/saved fallback when a live source is unavailable (723ms)
+  ✓   6 tests/browser/live-motion.spec.js:132:3 › lab 2: responsive phone viewport, actual live data and canvas exploration control (2.0s)
+  ✓   7 tests/browser/live-motion.spec.js:25:3 › lab 3: actual live request, custom animated scene, interaction and raw checksum (2.4s)
+  ✓   8 tests/browser/live-motion.spec.js:117:3 › lab 3: no invented/saved fallback when a live source is unavailable (833ms)
+  ✓   9 tests/browser/live-motion.spec.js:132:3 › lab 3: responsive phone viewport, actual live data and canvas exploration control (1.2s)
+  ✓  10 tests/browser/live-motion.spec.js:25:3 › lab 4: actual live request, custom animated scene, interaction and raw checksum (3.9s)
+  ✓  11 tests/browser/live-motion.spec.js:117:3 › lab 4: no invented/saved fallback when a live source is unavailable (712ms)
+  ✓  12 tests/browser/live-motion.spec.js:132:3 › lab 4: responsive phone viewport, actual live data and canvas exploration control (1.5s)
+  ✘  13 tests/browser/live-motion.spec.js:25:3 › lab 5: actual live request, custom animated scene, interaction and raw checksum (45.1s)
+  ✓  14 tests/browser/live-motion.spec.js:117:3 › lab 5: no invented/saved fallback when a live source is unavailable (701ms)
+  ✓  15 tests/browser/live-motion.spec.js:132:3 › lab 5: responsive phone viewport, actual live data and canvas exploration control (1.5s)
+  ✓  16 tests/browser/live-motion.spec.js:25:3 › lab 6: actual live request, custom animated scene, interaction and raw checksum (2.6s)
+  ✓  17 tests/browser/live-motion.spec.js:117:3 › lab 6: no invented/saved fallback when a live source is unavailable (566ms)
+  ✓  18 tests/browser/live-motion.spec.js:132:3 › lab 6: responsive phone viewport, actual live data and canvas exploration control (1.0s)
+  ✘  19 tests/browser/live-motion.spec.js:25:3 › lab 7: actual live request, custom animated scene, interaction and raw checksum (2.4s)
+  ✓  20 tests/browser/live-motion.spec.js:117:3 › lab 7: no invented/saved fallback when a live source is unavailable (1.6s)
+  ✓  21 tests/browser/live-motion.spec.js:132:3 › lab 7: responsive phone viewport, actual live data and canvas exploration control (1.6s)
+  ✓  22 tests/browser/live-motion.spec.js:25:3 › lab 8: actual live request, custom animated scene, interaction and raw checksum (5.6s)
+  ✓  23 tests/browser/live-motion.spec.js:117:3 › lab 8: no invented/saved fallback when a live source is unavailable (1.1s)
+  ✓  24 tests/browser/live-motion.spec.js:132:3 › lab 8: responsive phone viewport, actual live data and canvas exploration control (1.5s)
+  ✓  25 tests/browser/live-motion.spec.js:155:1 › retired saved-data requests are rejected (82ms)
+  ✓  26 tests/browser/live-motion.spec.js:162:1 › reduced motion gives a real static scene until explicitly played (938ms)
+
+
+  1) tests/browser/live-motion.spec.js:25:3 › lab 1: actual live request, custom animated scene, interaction and raw checksum 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 4
+    Received:   3
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      46 |     await expect
+      47 |       .poll(() => page.evaluate(() => window.__vizProbe.frame))
+    > 48 |       .toBeGreaterThan(before.probe.frame + 4);
+         |        ^
+      49 |     await page.screenshot({
+      50 |       path: `evidence/v2/screenshots/lab-${id}.png`,
+      51 |       fullPage: true,
+        at /Users/mymac1/Desktop/CPS5745/Week9/unit12Lab/unit12-live-motion-labs/tests/browser/live-motion.spec.js:48:8
+
+    Error Context: test-results/live-motion-lab-1-actual-l-f53e3-nteraction-and-raw-checksum/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/live-motion-lab-1-actual-l-f53e3-nteraction-and-raw-checksum/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/live-motion-lab-1-actual-l-f53e3-nteraction-and-raw-checksum/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/browser/live-motion.spec.js:25:3 › lab 5: actual live request, custom animated scene, interaction and raw checksum 
+
+    Test timeout of 45000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 45000ms exceeded.
+
+      16 |   page.on('pageerror', (e) => errors.push(e.message));
+      17 |   await page.goto('http://127.0.0.1:' + (5280 + id));
+    > 18 |   await page.waitForFunction(() => window.__labState?.meta?.mode === 'live', null, {
+         |              ^
+      19 |     timeout: 45000,
+      20 |   });
+      21 |   await expect(page.locator('.custom-scene')).toBeVisible();
+        at open (/Users/mymac1/Desktop/CPS5745/Week9/unit12Lab/unit12-live-motion-labs/tests/browser/live-motion.spec.js:18:14)
+        at /Users/mymac1/Desktop/CPS5745/Week9/unit12Lab/unit12-live-motion-labs/tests/browser/live-motion.spec.js:30:20
+
+    Error Context: test-results/live-motion-lab-5-actual-l-dd758-nteraction-and-raw-checksum/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/live-motion-lab-5-actual-l-dd758-nteraction-and-raw-checksum/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/live-motion-lab-5-actual-l-dd758-nteraction-and-raw-checksum/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/browser/live-motion.spec.js:25:3 › lab 7: actual live request, custom animated scene, interaction and raw checksum 
+
+    Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+
+      71 |     const frame = await page.evaluate(() => window.__vizProbe.frame);
+      72 |     await page.waitForTimeout(350);
+    > 73 |     expect(await page.evaluate(() => window.__vizProbe.frame)).toBe(frame);
+         |                       ^
+      74 |     await page.getByRole('button', { name: 'Play motion', exact: true }).click();
+      75 |     await expect
+      76 |       .poll(() => page.evaluate(() => window.__vizProbe.frame))
+        at /Users/mymac1/Desktop/CPS5745/Week9/unit12Lab/unit12-live-motion-labs/tests/browser/live-motion.spec.js:73:23
+
+    Error Context: test-results/live-motion-lab-7-actual-l-9f296-nteraction-and-raw-checksum/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/live-motion-lab-7-actual-l-9f296-nteraction-and-raw-checksum/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/live-motion-lab-7-actual-l-9f296-nteraction-and-raw-checksum/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/browser/live-motion.spec.js:25:3 › lab 1: actual live request, custom animated scene, interaction and raw checksum 
+    tests/browser/live-motion.spec.js:25:3 › lab 5: actual live request, custom animated scene, interaction and raw checksum 
+    tests/browser/live-motion.spec.js:25:3 › lab 7: actual live request, custom animated scene, interaction and raw checksum 
+  23 passed (1.8m)

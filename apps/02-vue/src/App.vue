@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { watchLive, recentYears } from './shared/sources.js';
-import { draw } from './shared/lab.js';
+import { draw, stopExperience } from './shared/lab.js';
 const chart = ref(null),
   packet = ref(null),
   years = ref(25),
@@ -14,7 +14,7 @@ function load() {
   packet.value = null;
   loading.value = true;
   error.value = '';
-  chart.value?.replaceChildren();
+  if (chart.value) stopExperience(chart.value);
   stop = watchLive(
     metric.value,
     (p) => {
@@ -43,7 +43,10 @@ function redraw() {
   });
 }
 onMounted(load);
-onBeforeUnmount(() => stop?.());
+onBeforeUnmount(() => {
+  stop?.();
+  if (chart.value) stopExperience(chart.value);
+});
 watch(metric, load);
 watch([packet, years], redraw, { flush: 'post' });
 </script>

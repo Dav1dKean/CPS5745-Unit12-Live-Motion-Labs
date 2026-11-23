@@ -1,0 +1,20 @@
+1 PASS PASS PASS locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByLabel('Center on earthquake', { exact: true })
+
+2 PASS PASS PASS locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByLabel('Compare country A', { exact: true })
+
+3 PASS PASS PASS 
+4 PASS PASS PASS locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByLabel('Pin catalog work', { exact: true })
+
+5 PASS PASS PASS 
+6 NOT VERIFIED — The expression evaluated to a falsy value:
+
+  assert(
+ PASS PASS 
+7 PASS PASS PASS 
+8 PASS PASS PASS 

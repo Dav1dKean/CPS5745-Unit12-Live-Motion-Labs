@@ -20,7 +20,16 @@ export function weather(node, packet, rows) {
   let index = 0,
     clock = 0,
     auto = true,
-    trail = true;
+    trail = true,
+    interval = rows;
+  const nyTime = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
   const x = d3
       .scaleLinear()
       .domain(d3.extent(rows, (d) => d.time))
@@ -95,6 +104,7 @@ export function weather(node, packet, rows) {
             hour: 'numeric',
             month: 'short',
             day: 'numeric',
+            timeZone: 'America/New_York',
           }),
         ),
     );
@@ -108,13 +118,18 @@ export function weather(node, packet, rows) {
           [80, 475],
           [750, 540],
         ])
-        .on('brush', (e) => {
+        .on('brush end', (e) => {
           if (e.selection) {
-            const t = x.invert((e.selection[0] + e.selection[1]) / 2);
+            const [start, end] = e.selection.map(x.invert);
+            interval = rows.filter((d) => d.time >= start && d.time <= end);
+            const t = (start + end) / 2;
             index = d3.leastIndex(rows, (d) => Math.abs(d.time - t));
             auto = false;
             update();
+          } else {
+            interval = rows;
           }
+          reportInterval();
         }),
     );
   svg
@@ -160,18 +175,30 @@ export function weather(node, packet, rows) {
         ? `${d.humidity}% relative humidity`
         : 'Humidity not reported',
     );
-    hour.text(new Date(d.time).toLocaleString());
+    hour.text(nyTime.format(d.time));
     scan.attr('x1', x(d.time)).attr('x2', x(d.time));
     halo.attr('cx', x(d.time)).attr('cy', temp(d.value));
-    timeline.set(
-      index,
-      new Date(d.time).toLocaleTimeString('en-US', { hour: 'numeric' }),
-    );
+    timeline.set(index, nyTime.format(d.time));
     scene.probe.hour = d.time;
     scene.probe.wind = d.wind;
     scene.probe.temperature = d.value;
   }
+  function reportInterval() {
+    const warmest = d3.greatest(interval, (d) => d.value);
+    const coolest = d3.least(interval, (d) => d.value);
+    const windText = (d) =>
+      Number.isFinite(d.wind)
+        ? `${d.wind} m/s${Number.isFinite(d.direction) ? ` from ${d.direction}°` : ''}`
+        : 'wind unreported';
+    scene.report(
+      warmest
+        ? `${interval.length} forecast hours · ${nyTime.format(interval[0].time)} – ${nyTime.format(interval.at(-1).time)}. Warmest ${warmest.value} °C at ${nyTime.format(warmest.time)}, ${windText(warmest)}. Coolest ${coolest.value} °C at ${nyTime.format(coolest.time)}, ${windText(coolest)}.`
+        : 'No reporting hour falls inside the brushed window.',
+    );
+    scene.probe.interval = interval.map((d) => d.time);
+  }
   update();
+  reportInterval();
   scene.inspect(
     'A temperature ribbon and a live-requested wind field',
     'Scrub time: color, wind advection, humidity and the crosshair stay linked to the same forecast hour.',

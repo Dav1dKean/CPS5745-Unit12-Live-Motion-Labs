@@ -30,7 +30,8 @@ export function swarm(node, packet, rows) {
     auto = true,
     clock = 0,
     yaw = 0.25,
-    pinned = null;
+    pinned = null,
+    brushed = null;
   const byBin = d3.group(rows, (d) => Math.floor(d.x * 2) / 2);
   const particles = rows.map((d, i) => ({
     ...d,
@@ -72,9 +73,26 @@ export function swarm(node, packet, rows) {
     (d) => `M ${d.magnitude} · ${number(d.depthKm)} km`,
   );
   dragNodes(glyph, simulation);
-  glyph.on('click', (_, d) => {
-    pinned = d.id;
-    const original = rows.find((r) => r.id === d.id);
+  const picker = scene.choose(
+    'Track USGS event',
+    [
+      ['', 'Choose an event'],
+      ...rows.map((d) => [d.id, `${d.id} · M ${d.x} · ${d.label}`]),
+    ],
+    (id) => pinEvent(id),
+  );
+  function pinEvent(id) {
+    pinned = id || null;
+    picker.value = id;
+    scene.probe.pinned = pinned;
+    reportSelection();
+    render(scene.probe.time);
+  }
+  glyph.on('click keydown', (event, d) => {
+    if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
+    event.preventDefault();
+    pinEvent(d.id);
+    const original = rawByID.get(d.id);
     scene.inspect(
       original.label,
       `M ${original.x} · ${original.y} km deep · ${new Date(original.time).toLocaleString()}`,
@@ -91,6 +109,15 @@ export function swarm(node, packet, rows) {
   const top = label(svg, 90, 40, 'MAGNITUDE SWARM', 18, '#3e4775');
   const countLabel = label(svg, 760, 40, `${rows.length} real earthquakes`, 14);
   const rawByID = new Map(rows.map((d) => [d.id, d]));
+  function reportSelection() {
+    const event = rawByID.get(pinned);
+    const pin = event ? `Tracked ${event.id} · M ${event.x} · ${event.y} km. ` : '';
+    const ids = brushed ? [...brushed].slice(0, 5).join(', ') : '';
+    scene.report(
+      `${pin}${brushed ? `Brushed ${brushed.size} IDs: ${ids}${brushed.size > 5 ? ', …' : ''}` : 'Brush the magnitude strip to track a subset across layouts.'}`,
+    );
+    scene.probe.selectedEventIds = brushed ? [...brushed] : [];
+  }
   function targets() {
     guide.selectAll('*').remove();
     top.text(['MAGNITUDE SWARM', 'BIN SCULPTURE', 'DEPTH ORBIT'][mode]);
@@ -133,6 +160,10 @@ export function swarm(node, packet, rows) {
       mode = i;
       auto = false;
       targets();
+      if (!scene.probe.playing) {
+        simulation.tick(35);
+        render(scene.probe.time);
+      }
     },
   );
   scene.controls(
@@ -152,7 +183,9 @@ export function swarm(node, packet, rows) {
         ])
         .on('brush end', (e) => {
           if (!e.selection) {
-            glyph.attr('opacity', 1);
+            brushed = null;
+            reportSelection();
+            render(scene.probe.time);
             return;
           }
           const [a, b] = e.selection.map(x.invert);
@@ -160,12 +193,13 @@ export function swarm(node, packet, rows) {
             const d = rawByID.get(p.id);
             return d.x >= a && d.x <= b;
           });
-          glyph.attr('opacity', (p) => (chosen.includes(p) ? 1 : 0.08));
+          brushed = new Set(chosen.map((d) => d.id));
+          reportSelection();
+          render(scene.probe.time);
           scene.inspect(
             `${chosen.length} events in the brushed interval`,
             `Magnitude ${a.toFixed(2)}–${b.toFixed(2)}; selection is linked to actual event IDs.`,
           );
-          scene.probe.selectedEventIds = chosen.map((d) => d.id);
         }),
     );
   label(
@@ -181,6 +215,7 @@ export function swarm(node, packet, rows) {
     'A histogram built from individual events',
     'Watch the same particles become a swarm, stacked bins and a rotating depth cloud. Nothing is replaced by synthetic counts.',
   );
+  reportSelection();
   scene.frame((dt, t) => {
     clock += dt;
     if (auto && clock > 7) {
@@ -193,6 +228,12 @@ export function swarm(node, packet, rows) {
       targets();
     }
     simulation.tick();
+    render(t);
+  });
+  function render(t) {
+    glyph.attr('opacity', (d) =>
+      !brushed || brushed.has(d.id) || d.id === pinned ? 1 : 0.12,
+    );
     glyph
       .attr('cx', (d) => d.x)
       .attr('cy', (d) => d.y)
@@ -205,6 +246,6 @@ export function swarm(node, packet, rows) {
         .attr('cy', selected.y)
         .attr('r', 12 + Math.sin(t * 3) * 3);
     scene.probe.particleCount = particles.length;
-  });
+  }
   return scene;
 }
